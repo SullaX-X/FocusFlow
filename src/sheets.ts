@@ -4,6 +4,7 @@ export async function syncToSheets(data: any, webhookUrl: string): Promise<void>
   try {
     await fetch(webhookUrl, {
       method: 'POST',
+      mode: 'no-cors',
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'text/plain;charset=utf-8', // Plain text helps bypass some CORS issues with Apps Script

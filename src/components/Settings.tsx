@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Copy, Check } from 'lucide-react';
 import ConfirmModal from './ConfirmModal';
+import { syncToSheets } from '../sheets';
 
 export default function Settings() {
   const [webhookUrl, setWebhookUrl] = useState('');
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showConfirmReset, setShowConfirmReset] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncSuccess, setSyncSuccess] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem('focusflow_webhook_url');
@@ -15,10 +18,30 @@ export default function Settings() {
     }
   }, []);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     localStorage.setItem('focusflow_webhook_url', webhookUrl);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
+    
+    if (webhookUrl) {
+      await handleManualSync();
+    }
+  };
+
+  const handleManualSync = async () => {
+    if (!webhookUrl) return;
+    setIsSyncing(true);
+    try {
+      const storedData = localStorage.getItem('focusflow_disciplines');
+      const data = storedData ? JSON.parse(storedData) : [];
+      await syncToSheets(data, webhookUrl);
+      setSyncSuccess(true);
+      setTimeout(() => setSyncSuccess(false), 3000);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   const scriptCode = `function doPost(e) {
@@ -131,12 +154,21 @@ export default function Settings() {
               placeholder="https://script.google.com/macros/s/.../exec"
             />
           </div>
-          <button 
-            onClick={handleSave}
-            className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-[#494bd6] dark:hover:bg-[#c0c1ff] dark:hover:text-[#1000a9] px-5 py-2.5 rounded-xl font-medium transition-colors"
-          >
-            {saved ? 'Сохранено!' : 'Сохранить настройки'}
-          </button>
+          <div className="flex gap-4">
+            <button 
+              onClick={handleSave}
+              className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-[#494bd6] dark:hover:bg-[#c0c1ff] dark:hover:text-[#1000a9] px-5 py-2.5 rounded-xl font-medium transition-colors"
+            >
+              {saved ? 'Сохранено!' : 'Сохранить настройки'}
+            </button>
+            <button 
+              onClick={handleManualSync}
+              disabled={!webhookUrl || isSyncing}
+              className="bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-[#1c2b3c] dark:hover:bg-[#273647] dark:text-[#d4e4fa] px-5 py-2.5 rounded-xl font-medium transition-colors disabled:opacity-50"
+            >
+              {isSyncing ? 'Синхронизация...' : syncSuccess ? 'Успешно!' : 'Синхронизировать сейчас'}
+            </button>
+          </div>
         </div>
 
         <div className="mt-8 pt-6 border-t border-slate-200 dark:border-[#273647]">
