@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Copy, Check } from 'lucide-react';
 import ConfirmModal from './ConfirmModal';
-import { syncToSheets } from '../sheets';
+import { syncToSheets, pullFromSheets } from '../sheets';
 
 export default function Settings() {
   const [webhookUrl, setWebhookUrl] = useState('');
@@ -24,7 +24,25 @@ export default function Settings() {
     setTimeout(() => setSaved(false), 3000);
     
     if (webhookUrl) {
-      await handleManualSync();
+      setIsSyncing(true);
+      try {
+        const remoteData = await pullFromSheets(webhookUrl);
+        if (remoteData && Array.isArray(remoteData) && remoteData.length > 0) {
+          const storedData = localStorage.getItem('focusflow_disciplines');
+          const localData = storedData ? JSON.parse(storedData) : [];
+          
+          if (localData.length === 0) {
+            localStorage.setItem('focusflow_disciplines', JSON.stringify(remoteData));
+            window.location.reload();
+            return;
+          }
+        }
+        await handleManualSync();
+      } catch (e) {
+        await handleManualSync();
+      } finally {
+        setIsSyncing(false);
+      }
     }
   };
 
@@ -38,7 +56,7 @@ export default function Settings() {
       setSyncSuccess(true);
       setTimeout(() => setSyncSuccess(false), 3000);
     } catch (e) {
-      console.error(e);
+      console.warn('Manual sync failed:', e);
     } finally {
       setIsSyncing(false);
     }
@@ -47,23 +65,26 @@ export default function Settings() {
   const scriptCode = `function doPost(e) {
   try {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    
-    // Получаем переданные данные
     var data = JSON.parse(e.postData.contents);
-    
-    // Очищаем столбец A
     sheet.getRange("A:A").clearContent();
-    
-    // Записываем новые данные (как JSON) в первую ячейку
     sheet.getRange("A1").setValue(JSON.stringify(data));
-    
-    return ContentService.createTextOutput("Success")
-      .setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
   } catch (error) {
-    return ContentService.createTextOutput("Error: " + error.toString())
-      .setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput("Error: " + error.toString()).setMimeType(ContentService.MimeType.TEXT);
+  }
+}
+
+function doGet(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var data = sheet.getRange("A1").getValue();
+    if (!data) data = "[]";
+    return ContentService.createTextOutput(data).setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput("[]").setMimeType(ContentService.MimeType.JSON);
   }
 }`;
+
 
   const handleCopy = () => {
     navigator.clipboard.writeText(scriptCode);

@@ -11,7 +11,7 @@ import Statistics from './components/Statistics';
 import Settings from './components/Settings';
 import { Discipline, Tab } from './types';
 import { LayoutDashboard, CheckSquare, BarChart2, Settings as SettingsIcon } from 'lucide-react';
-import { syncToSheets } from './sheets';
+import { syncToSheets, pullFromSheets } from './sheets';
 import { useTheme } from './ThemeContext';
 
 export default function App() {
@@ -31,6 +31,37 @@ export default function App() {
   const { theme } = useTheme();
 
   useEffect(() => {
+    const pullInitialData = async () => {
+      const webhookUrl = localStorage.getItem('focusflow_webhook_url');
+      if (webhookUrl) {
+        setIsSyncing(true);
+        try {
+          const remoteData = await pullFromSheets(webhookUrl);
+          if (remoteData && Array.isArray(remoteData) && remoteData.length > 0) {
+            setDisciplines(prev => {
+              const merged = [...prev];
+              remoteData.forEach((rDisc: any) => {
+                const lDisc = merged.find(d => d.id === rDisc.id);
+                if (lDisc) {
+                  lDisc.history = { ...rDisc.history, ...lDisc.history };
+                } else {
+                  merged.push(rDisc);
+                }
+              });
+              return merged;
+            });
+          }
+        } catch (e) {
+          console.warn('Silent sync error (CORS/Deployment issue):', e);
+        } finally {
+          setIsSyncing(false);
+        }
+      }
+    };
+    pullInitialData();
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem('focusflow_disciplines', JSON.stringify(disciplines));
     
     const syncData = async () => {
@@ -42,7 +73,7 @@ export default function App() {
             await syncToSheets(disciplines, webhookUrl);
           }
         } catch (e) {
-          console.error('Failed to sync to sheets', e);
+          console.warn('Failed to sync to sheets (likely CORS issue):', e);
         } finally {
           setIsSyncing(false);
         }
