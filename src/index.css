@@ -1,3 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-bg-light: #F7F8FA;
+  --color-surface-light: #FFFFFF;
+  --color-border-light: #EAECEF;
+  --color-text-light: #0F172A;
+  --color-sec-light: #64748B;
+  --color-primary-light: #2563EB;
+  --color-success-light: #10B981;
+
+  --color-bg-dark: #0F1115;
+  --color-surface-dark: #181B20;
+  --color-border-dark: #30343D;
+  --color-text-dark: #F5F5F5;
+  --color-sec-dark: #94A3B8;
+  --color-primary-dark: #3B82F6;
+
+  --color-disc-py: #EAB308;
+  --color-disc-sql: #3B82F6;
+  --color-disc-math: #A855F7;
+  --color-disc-eng: #22C55E;
+}
+
 @custom-variant dark (&:is(.dark *));
+
+html {
+  font-family: var(--font-sans);
+}

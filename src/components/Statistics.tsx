@@ -24,6 +24,30 @@ interface Props {
 export default function Statistics({ disciplines }: Props) {
   const past7Days = getPast7Days().reverse();
 
+  // Generate last 60 days for heatmap
+  const getPastNDays = (n: number) => {
+    const dates = [];
+    for (let i = n - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      dates.push(`${year}-${month}-${day}`);
+    }
+    return dates;
+  };
+  const heatmapDays = getPastNDays(60);
+  const heatmapData = heatmapDays.map(date => {
+    // Score based on tasks done or disciplines completed
+    let score = 0;
+    disciplines.forEach(d => {
+      if (d.history[date]) score += 1;
+      // also check task history if we had it, but history here represents completing a discipline day.
+    });
+    return { date, score };
+  });
+
   // Calculate completion for each day
   const data = past7Days.map(date => {
     const activeDisciplines = disciplines.filter(d => !d.createdAt || d.createdAt <= date);
@@ -114,6 +138,39 @@ export default function Statistics({ disciplines }: Props) {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
+        className="bg-white dark:bg-[#122131] border border-slate-200 dark:border-[#273647] shadow-sm p-6 rounded-2xl mb-8"
+      >
+        <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-6">График активности (Heatmap)</h2>
+        <div className="flex flex-wrap gap-1 md:gap-1.5 justify-end">
+          {heatmapData.map((day, i) => {
+            let bgClass = "bg-slate-100 dark:bg-[#1c2b3c]";
+            if (day.score === 1) bgClass = "bg-green-200 dark:bg-green-900/40";
+            else if (day.score === 2) bgClass = "bg-green-400 dark:bg-green-700/60";
+            else if (day.score >= 3) bgClass = "bg-green-600 dark:bg-green-500";
+            
+            return (
+              <div 
+                key={day.date} 
+                title={`${day.date}: ${day.score} выполнено`}
+                className={`w-3 h-3 md:w-4 md:h-4 rounded-sm ${bgClass} transition-colors`}
+              />
+            )
+          })}
+        </div>
+        <div className="flex justify-end items-center gap-2 mt-3 text-xs text-slate-500 dark:text-[#908fa0]">
+          <span>Меньше</span>
+          <div className="w-3 h-3 rounded-sm bg-slate-100 dark:bg-[#1c2b3c]"></div>
+          <div className="w-3 h-3 rounded-sm bg-green-200 dark:bg-green-900/40"></div>
+          <div className="w-3 h-3 rounded-sm bg-green-400 dark:bg-green-700/60"></div>
+          <div className="w-3 h-3 rounded-sm bg-green-600 dark:bg-green-500"></div>
+          <span>Больше</span>
+        </div>
+      </motion.div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
         className="bg-white dark:bg-[#122131] border border-slate-200 dark:border-[#273647] shadow-sm p-6 rounded-2xl"
       >
         <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-6">Общее соотношение (неделя)</h2>

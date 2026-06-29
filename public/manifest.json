@@ -1,0 +1,16 @@
+{
+  "name": "FocusFlow",
+  "short_name": "FocusFlow",
+  "description": "Приложение для глубокой работы и управления дисциплинами",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#051424",
+  "theme_color": "#494bd6",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

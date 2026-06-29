@@ -2,15 +2,19 @@ export async function syncToSheets(data: any, webhookUrl: string): Promise<void>
   if (!webhookUrl) return;
 
   try {
-    await fetch(webhookUrl, {
+    const response = await fetch(webhookUrl, {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
         'Content-Type': 'text/plain;charset=utf-8',
       }
     });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
   } catch (error) {
     console.error('Failed to sync to sheets webhook:', error);
+    throw error;
   }
 }
 

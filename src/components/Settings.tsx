@@ -68,9 +68,9 @@ export default function Settings() {
     var data = JSON.parse(e.postData.contents);
     sheet.getRange("A:A").clearContent();
     sheet.getRange("A1").setValue(JSON.stringify(data));
-    return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput(JSON.stringify({"status": "success"})).setMimeType(ContentService.MimeType.JSON);
   } catch (error) {
-    return ContentService.createTextOutput("Error: " + error.toString()).setMimeType(ContentService.MimeType.TEXT);
+    return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": error.toString()})).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
