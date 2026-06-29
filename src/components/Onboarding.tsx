@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Discipline } from '../types';
 
@@ -62,7 +62,7 @@ export default function Onboarding({ onComplete }: { onComplete: (discipline?: D
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900 z-[200] flex items-center justify-center p-6 text-[#F5F5F5]">
+    <div className="fixed inset-0 bg-slate-900 z-[200] flex items-center justify-center p-6 text-theme-text">
       {/* Decorative background blur */}
       <div className="absolute top-1/4 -left-24 w-96 h-96 bg-blue-600 rounded-full blur-[128px] opacity-20 mix-blend-screen pointer-events-none"></div>
       <div className="absolute bottom-1/4 -right-24 w-96 h-96 bg-purple-600 rounded-full blur-[128px] opacity-20 mix-blend-screen pointer-events-none"></div>
@@ -86,7 +86,7 @@ export default function Onboarding({ onComplete }: { onComplete: (discipline?: D
             onChange={e => setGoal(e.target.value)}
             disabled={isGenerating}
             placeholder="Например: Выучить React, Подготовиться к марафону..."
-            className="w-full bg-[#181B20] border border-[#30343D] text-white rounded-2xl px-6 py-5 text-lg outline-none focus:border-blue-500 transition-colors shadow-inner"
+            className="w-full bg-theme-card border border-theme-border text-white rounded-2xl px-6 py-5 text-lg outline-none focus:border-blue-500 transition-colors shadow-inner"
             autoFocus
           />
           {error && <p className="text-red-400 text-sm">{error}</p>}
@@ -95,7 +95,7 @@ export default function Onboarding({ onComplete }: { onComplete: (discipline?: D
               type="button"
               onClick={() => onComplete()}
               disabled={isGenerating}
-              className="flex-1 py-4 px-6 rounded-2xl text-slate-400 hover:text-white hover:bg-[#181B20] transition-colors"
+              className="flex-1 py-4 px-6 rounded-2xl text-slate-400 hover:text-white hover:bg-theme-card transition-colors"
             >
               Пропустить
             </button>

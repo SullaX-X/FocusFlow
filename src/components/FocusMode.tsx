@@ -63,6 +63,8 @@ export default function FocusMode({ task, onClose }: { task: Task | null, onClos
     }
   }, [isZenLock]);
 
+  const [isMinimized, setIsMinimized] = useState(false);
+
   if (!task) return null;
 
   const minutes = Math.floor(timeLeft / 60);
@@ -101,15 +103,56 @@ export default function FocusMode({ task, onClose }: { task: Task | null, onClos
     }
   };
 
+  if (isMinimized) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="fixed bottom-6 right-6 bg-theme-card border border-theme-border p-4 rounded-2xl shadow-2xl z-[999] flex items-center gap-4 cursor-pointer hover:border-blue-500 transition-colors group"
+        onClick={() => setIsMinimized(false)}
+      >
+        <div className="flex flex-col">
+          <span className="text-xs text-theme-muted font-medium max-w-[150px] truncate">{task.title}</span>
+          <div className="text-2xl font-mono font-bold text-theme-text tabular-nums tracking-tighter">
+            {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={(e) => { e.stopPropagation(); toggleTimer(); }}
+            className="w-10 h-10 bg-blue-50 dark:bg-blue-500/20 hover:bg-blue-100 dark:hover:bg-blue-500/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center transition-colors"
+          >
+            <span className="material-symbols-outlined">{isActive ? 'pause' : 'play_arrow'}</span>
+          </button>
+          <button 
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            className="w-8 h-8 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full flex items-center justify-center transition-colors"
+          >
+            <span className="material-symbols-outlined text-sm">close</span>
+          </button>
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
-    <div className="fixed inset-0 bg-[#0F1115] text-[#F5F5F5] z-[100] flex flex-col p-6 overflow-hidden">
+    <div className="fixed inset-0 bg-theme-bg text-theme-text z-[999] flex flex-col p-6 overflow-hidden">
       {!isZenLock && (
-        <button 
-          onClick={onClose}
-          className="absolute top-8 left-8 text-slate-500 hover:text-white transition-colors p-2 z-50"
-        >
-          <span className="material-symbols-outlined text-3xl">close</span>
-        </button>
+        <div className="absolute top-8 left-8 flex items-center gap-4 z-50">
+          <button 
+            onClick={() => setIsMinimized(true)}
+            className="text-slate-500 hover:text-theme-text transition-colors p-2 bg-theme-card rounded-full"
+            title="Свернуть"
+          >
+            <span className="material-symbols-outlined text-xl">close_fullscreen</span>
+          </button>
+          <button 
+            onClick={onClose}
+            className="text-slate-500 hover:text-theme-text transition-colors p-2"
+          >
+            <span className="material-symbols-outlined text-3xl">close</span>
+          </button>
+        </div>
       )}
 
       <div className="absolute top-8 right-8 flex items-center gap-6 z-50">
@@ -127,7 +170,7 @@ export default function FocusMode({ task, onClose }: { task: Task | null, onClos
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="absolute top-full right-0 mt-2 w-48 bg-[#181B20] border border-[#30343D] rounded-xl shadow-2xl overflow-hidden z-50"
+                className="absolute top-full right-0 mt-2 w-48 bg-theme-card border border-theme-border rounded-xl shadow-2xl overflow-hidden z-50"
               >
                 <div className="p-2 space-y-1">
                   <button 
@@ -179,11 +222,24 @@ export default function FocusMode({ task, onClose }: { task: Task | null, onClos
             {task.description && <p className="text-slate-400">{task.description}</p>}
           </div>
 
-          <div className="text-[120px] md:text-[180px] font-mono font-bold leading-none tracking-tighter tabular-nums mb-12">
+          <div className="text-[120px] md:text-[180px] font-mono font-bold leading-none tracking-tighter tabular-nums mb-8 relative group">
             {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+            {!isActive && (
+              <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                {[15, 25, 45, 60].map(m => (
+                  <button 
+                    key={m}
+                    onClick={() => setTimeLeft(m * 60)}
+                    className="px-3 py-1 bg-theme-card hover:bg-[#20242B] border border-theme-border rounded-lg text-sm text-slate-400 hover:text-white transition-colors"
+                  >
+                    {m}m
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="flex items-center justify-center gap-6">
+          <div className="flex items-center justify-center gap-6 mt-8">
             <button 
               onClick={toggleTimer}
               className="w-20 h-20 bg-blue-600 hover:bg-blue-500 text-white rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(37,99,235,0.3)] transition-all hover:scale-105 active:scale-95"
@@ -193,7 +249,7 @@ export default function FocusMode({ task, onClose }: { task: Task | null, onClos
             
             <button 
               onClick={resetTimer}
-              className="w-14 h-14 bg-[#181B20] border border-[#30343D] hover:bg-[#20242B] text-slate-400 rounded-full flex items-center justify-center transition-all active:scale-95"
+              className="w-14 h-14 bg-theme-card border border-theme-border hover:bg-[#20242B] text-slate-400 rounded-full flex items-center justify-center transition-all active:scale-95"
             >
               <span className="material-symbols-outlined">restart_alt</span>
             </button>
@@ -227,8 +283,8 @@ export default function FocusMode({ task, onClose }: { task: Task | null, onClos
             animate={{ opacity: 1, x: 0 }}
             className="w-1/2 h-full flex flex-col justify-center pt-24 pb-12 pr-12"
           >
-            <div className="bg-[#181B20] border border-[#30343D] rounded-3xl p-8 h-full max-h-[800px] overflow-y-auto shadow-2xl relative">
-              <div className="sticky top-0 bg-[#181B20] pb-6 mb-6 border-b border-[#30343D] flex items-center gap-3">
+            <div className="bg-theme-card border border-theme-border rounded-3xl p-8 h-full max-h-[800px] overflow-y-auto shadow-2xl relative">
+              <div className="sticky top-0 bg-theme-card pb-6 mb-6 border-b border-theme-border flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400">
                   <span className="material-symbols-outlined">auto_awesome</span>
                 </div>

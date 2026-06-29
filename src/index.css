@@ -4,29 +4,87 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   
-  --color-bg-light: #F7F8FA;
-  --color-surface-light: #FFFFFF;
-  --color-border-light: #EAECEF;
-  --color-text-light: #0F172A;
-  --color-sec-light: #64748B;
-  --color-primary-light: #2563EB;
-  --color-success-light: #10B981;
-
-  --color-bg-dark: #0F1115;
-  --color-surface-dark: #181B20;
-  --color-border-dark: #30343D;
-  --color-text-dark: #F5F5F5;
-  --color-sec-dark: #94A3B8;
-  --color-primary-dark: #3B82F6;
+  --color-theme-bg: var(--bg);
+  --color-theme-sidebar: var(--sidebar);
+  --color-theme-sidebar-border: var(--sidebar-border);
+  --color-theme-card: var(--card);
+  --color-theme-border: var(--border);
+  --color-theme-text: var(--text-main);
+  --color-theme-muted: var(--text-muted);
+  --color-theme-accent: var(--accent);
+  --color-theme-success: var(--success);
 
   --color-disc-py: #EAB308;
-  --color-disc-sql: #3B82F6;
+  --color-disc-sql: var(--accent);
   --color-disc-math: #A855F7;
   --color-disc-eng: #22C55E;
 }
 
-@custom-variant dark (&:is(.dark *));
+@layer base {
+  :root, html.light {
+    --bg: #F8FAFC;
+    --sidebar: #FFFFFF;
+    --card: #FFFFFF;
+    --border: #E2E8F0;
+    --sidebar-border: #E2E8F0;
+    --text-main: #0F172A;
+    --text-muted: #64748B;
+    --accent: #2563EB;
+    --success: #10B981;
+  }
+
+  html.dark {
+    --bg: #0F172A;
+    --sidebar: #1E293B;
+    --card: #1E293B;
+    --border: #1E293B;
+    --sidebar-border: #1E293B;
+    --text-main: #F1F5F9;
+    --text-muted: #94A3B8;
+    --accent: #3B82F6;
+    --success: #10B981;
+  }
+
+  html.nordic {
+    --bg: #2E3440;
+    --sidebar: #242933;
+    --card: #3B4252;
+    --border: #3B4252;
+    --sidebar-border: #242933;
+    --text-main: #ECEFF4;
+    --text-muted: #81A1C1;
+    --accent: #88C0D0;
+    --success: #A3BE8C;
+  }
+
+  html.latte {
+    --bg: #F5F1EA;
+    --sidebar: #EDE6D9;
+    --card: #FFFFFF;
+    --border: #E6DFD3;
+    --sidebar-border: #EDE6D9;
+    --text-main: #433422;
+    --text-muted: #8C8273;
+    --accent: #BC6C25;
+    --success: #6B8E6B;
+  }
+
+  html.oled {
+    --bg: #000000;
+    --sidebar: #000000;
+    --card: #0A0A0A;
+    --border: #1A1A1A;
+    --sidebar-border: #1A1A1A;
+    --text-main: #FFFFFF;
+    --text-muted: #666666;
+    --accent: #39FF14;
+    --success: #39FF14;
+  }
+}
 
 html {
   font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--text-main);
 }
+

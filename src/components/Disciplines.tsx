@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Trash2 } from 'lucide-react';
-import { Discipline } from '../types';
+import { Discipline, Task } from '../types';
 import { getPast7Days, formatDate, calculateStreak } from '../utils';
 import ConfirmModal from './ConfirmModal';
 
-export default function Disciplines({ disciplines, toggleDay, addDiscipline, deleteDiscipline, updateTask }: any) {
+export default function Disciplines({ disciplines, toggleDay, addDiscipline, deleteDiscipline, updateTask, startFocus }: any) {
   const [isAdding, setIsAdding] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [selectedTask, setSelectedTask] = useState<{disciplineId: string, themeId: string, task: Task} | null>(null);
@@ -27,8 +27,8 @@ export default function Disciplines({ disciplines, toggleDay, addDiscipline, del
     <div className="p-4 md:p-8 max-w-5xl mx-auto pb-24 md:pb-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 pt-4 md:pt-0">
         <div>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">Дисциплины</h2>
-          <p className="text-slate-500 dark:text-[#908fa0] text-sm md:text-base">Отслеживайте свои ежедневные обязательства и создавайте темп.</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-theme-text mb-2">Дисциплины</h2>
+          <p className="text-theme-muted text-sm md:text-base">Отслеживайте свои ежедневные обязательства и создавайте темп.</p>
         </div>
         <button 
           onClick={() => setIsAdding(true)}
@@ -47,7 +47,7 @@ export default function Disciplines({ disciplines, toggleDay, addDiscipline, del
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white dark:bg-[#122131] border border-slate-200 dark:border-[#273647] rounded-2xl p-4 md:p-5 hover:border-slate-300 dark:hover:border-[#464554] transition-colors shadow-sm"
+              className="bg-theme-card border border-theme-border rounded-2xl p-4 md:p-5 hover:border-slate-300 dark:hover:border-[#464554] transition-colors shadow-sm"
             >
               <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center gap-3 md:gap-4">
@@ -55,16 +55,16 @@ export default function Disciplines({ disciplines, toggleDay, addDiscipline, del
                     <span className="material-symbols-outlined text-xl md:text-2xl">{d.icon}</span>
                   </div>
                   <div>
-                    <h3 className="text-lg md:text-xl font-semibold text-slate-800 dark:text-white truncate max-w-[150px] sm:max-w-[300px]">{d.name}</h3>
-                    <p className="text-slate-500 dark:text-[#908fa0] text-xs md:text-sm mt-1 truncate max-w-[150px] sm:max-w-[300px]">{d.description}</p>
+                    <h3 className="text-lg md:text-xl font-semibold text-theme-text truncate max-w-[150px] sm:max-w-[300px]">{d.name}</h3>
+                    <p className="text-theme-muted text-xs md:text-sm mt-1 truncate max-w-[150px] sm:max-w-[300px]">{d.description}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 md:gap-4 shrink-0">
-                  <div className="flex items-center gap-1 md:gap-1.5 bg-green-50 dark:bg-[#1c2b3c] px-2 md:px-3 py-1 md:py-1.5 rounded-full border border-green-100 dark:border-[#273647]">
+                  <div className="flex items-center gap-1 md:gap-1.5 bg-green-50 dark:bg-theme-border px-2 md:px-3 py-1 md:py-1.5 rounded-full border border-green-100 dark:border-theme-border">
                     <span className="material-symbols-outlined text-green-500 dark:text-[#4de082] text-sm md:text-base" style={{fontVariationSettings: "'FILL' 1"}}>local_fire_department</span>
                     <span className="text-green-600 dark:text-[#4de082] font-bold text-xs md:text-sm">{calculateStreak(d.history)}</span>
                   </div>
-                  <button onClick={() => setDeleteConfirmId(d.id)} className="text-slate-400 hover:text-red-500 dark:text-[#908fa0] dark:hover:text-[#ffb4ab] transition-colors p-1 md:p-2 rounded-lg hover:bg-red-50 dark:hover:bg-[#93000a]/20">
+                  <button onClick={() => setDeleteConfirmId(d.id)} className="text-slate-400 hover:text-red-500 dark:text-theme-muted dark:hover:text-[#ffb4ab] transition-colors p-1 md:p-2 rounded-lg hover:bg-red-50 dark:hover:bg-[#93000a]/20">
                     <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
                   </button>
                 </div>
@@ -81,15 +81,15 @@ export default function Disciplines({ disciplines, toggleDay, addDiscipline, del
 
                   return (
                     <div key={date} className="flex flex-col items-center gap-1.5 md:gap-2 flex-1">
-                      <span className={`text-[10px] md:text-xs font-medium ${isToday ? 'text-blue-600 dark:text-[#c0c1ff]' : 'text-slate-500 dark:text-[#908fa0]'}`}>{dayName}</span>
+                      <span className={`text-[10px] md:text-xs font-medium ${isToday ? 'text-blue-600 dark:text-[#c0c1ff]' : 'text-theme-muted'}`}>{dayName}</span>
                       <button
                         onClick={() => toggleDay(d.id, date)}
                         className={`w-full aspect-square rounded-lg md:rounded-xl flex items-center justify-center transition-all duration-300 border-2 ${
                           isDone 
                             ? 'bg-green-500 border-green-500 dark:bg-[#00b55d] dark:border-[#00b55d] shadow-[0_0_12px_rgba(34,197,94,0.3)] dark:shadow-[0_0_12px_rgba(0,181,93,0.3)]' 
                             : isToday 
-                              ? 'bg-blue-50 border-blue-300 dark:bg-[#1c2b3c] dark:border-[#494bd6]/50'
-                              : 'bg-slate-50 border-slate-200 hover:border-slate-300 dark:bg-[#051424] dark:border-[#273647] dark:hover:border-[#464554]'
+                              ? 'bg-blue-50 border-blue-300 dark:bg-theme-border dark:border-[#494bd6]/50'
+                              : 'bg-slate-50 border-slate-200 hover:border-slate-300 dark:bg-theme-bg dark:border-theme-border dark:hover:border-[#464554]'
                         }`}
                       >
                         {isDone && (
@@ -99,7 +99,7 @@ export default function Disciplines({ disciplines, toggleDay, addDiscipline, del
                         )}
                         {!isDone && isPast && (
                           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
-                            <span className="material-symbols-outlined text-slate-400/70 dark:text-[#908fa0]/50 font-bold text-sm md:text-lg">close</span>
+                            <span className="material-symbols-outlined text-slate-400/70 dark:text-theme-muted/50 font-bold text-sm md:text-lg">close</span>
                           </motion.div>
                         )}
                       </button>
@@ -110,7 +110,7 @@ export default function Disciplines({ disciplines, toggleDay, addDiscipline, del
 
               {/* Tasks List */}
               {d.themes && d.themes.length > 0 && (
-                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-[#1c2b3c] space-y-4">
+                <div className="mt-6 pt-4 border-t border-theme-border space-y-4">
                   {d.themes.map(t => (
                     <div key={t.id}>
                       <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">{t.name}</h4>
@@ -118,13 +118,37 @@ export default function Disciplines({ disciplines, toggleDay, addDiscipline, del
                         {t.tasks.map(task => (
                           <div 
                             key={task.id} 
+                            tabIndex={0}
                             onClick={() => setSelectedTask({ disciplineId: d.id, themeId: t.id, task })}
-                            className="flex items-center gap-3 bg-slate-50 dark:bg-[#0F1115] p-3 rounded-xl border border-slate-100 dark:border-[#1c2b3c] cursor-pointer hover:border-blue-500 transition-colors"
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                setSelectedTask({ disciplineId: d.id, themeId: t.id, task });
+                              } else if (e.key === ' ') {
+                                e.preventDefault();
+                                handleUpdateTask(d.id, t.id, task.id, { status: task.status === 'done' ? 'plan' : 'done' });
+                              } else if (e.key.toLowerCase() === 'f') {
+                                if (startFocus) startFocus(task);
+                              } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                const items = Array.from(document.querySelectorAll('.task-item')) as HTMLElement[];
+                                const index = items.indexOf(e.currentTarget);
+                                if (e.key === 'ArrowDown' && index < items.length - 1) {
+                                  items[index + 1].focus();
+                                } else if (e.key === 'ArrowUp' && index > 0) {
+                                  items[index - 1].focus();
+                                }
+                              }
+                            }}
+                            className="task-item group flex items-center gap-3 bg-theme-bg p-3 rounded-xl border border-theme-border cursor-pointer hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-blue-50 dark:focus:bg-blue-900/20 transition-colors"
                           >
-                            <div className={`w-5 h-5 rounded-md flex items-center justify-center border transition-colors ${task.status === 'done' ? 'bg-blue-500 border-blue-500 text-white' : 'border-slate-300 dark:border-slate-600 bg-white dark:bg-[#181B20]'}`}>
-                              {task.status === 'done' && <span className="material-symbols-outlined text-[14px]">check</span>}
+                            <div className={`w-6 h-6 rounded-md flex items-center justify-center border transition-colors group-hover:bg-blue-500 group-hover:border-blue-500 group-hover:text-white ${task.status === 'done' ? 'bg-blue-500 border-blue-500 text-white' : 'border-theme-border bg-theme-card'}`}>
+                              {task.status === 'done' ? (
+                                <span className="material-symbols-outlined text-[14px]">check</span>
+                              ) : (
+                                <span className="material-symbols-outlined text-[16px] opacity-0 group-hover:opacity-100">play_arrow</span>
+                              )}
                             </div>
-                            <span className={`text-sm flex-1 ${task.status === 'done' ? 'text-slate-400 line-through' : 'text-slate-700 dark:text-[#F5F5F5]'}`}>
+                            <span className={`text-sm flex-1 ${task.status === 'done' ? 'text-slate-400 line-through' : 'text-theme-text'}`}>
                               {task.title}
                             </span>
                             {task.contentUrl && <span className="material-symbols-outlined text-slate-400 text-sm">link</span>}
@@ -142,8 +166,8 @@ export default function Disciplines({ disciplines, toggleDay, addDiscipline, del
         </AnimatePresence>
 
         {disciplines.length === 0 && (
-          <div className="text-center py-20 bg-white dark:bg-[#122131] rounded-2xl border border-dashed border-slate-300 dark:border-[#273647]">
-            <p className="text-slate-500 dark:text-[#908fa0]">Дисциплины еще не добавлены. Создайте новую, чтобы начать отслеживание!</p>
+          <div className="text-center py-20 bg-theme-card rounded-2xl border border-dashed border-theme-border">
+            <p className="text-theme-muted">Дисциплины еще не добавлены. Создайте новую, чтобы начать отслеживание!</p>
           </div>
         )}
       </div>
@@ -213,11 +237,11 @@ function TaskSidePanel({ task, disciplineId, themeId, onClose, onUpdateTask }: a
         animate={{ x: 0 }}
         exit={{ x: '100%' }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-        className="fixed top-0 right-0 bottom-0 w-full md:w-[400px] bg-white dark:bg-[#181B20] border-l border-slate-200 dark:border-[#30343D] shadow-2xl z-[110] flex flex-col"
+        className="fixed top-0 right-0 bottom-0 w-full md:w-[400px] bg-theme-card border-l border-theme-border shadow-2xl z-[110] flex flex-col"
       >
-        <div className="p-6 border-b border-slate-100 dark:border-[#30343D] flex justify-between items-start">
-          <h3 className="text-xl font-bold text-slate-800 dark:text-[#F5F5F5]">{task.title}</h3>
-          <button onClick={onClose} className="p-2 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-[#F5F5F5] rounded-full hover:bg-slate-100 dark:hover:bg-[#30343D]">
+        <div className="p-6 border-b border-theme-border flex justify-between items-start">
+          <h3 className="text-xl font-bold text-theme-text">{task.title}</h3>
+          <button onClick={onClose} className="p-2 -mr-2 text-slate-400 hover:text-slate-600 dark:hover:text-theme-text rounded-full hover:bg-theme-border-border">
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
@@ -226,7 +250,7 @@ function TaskSidePanel({ task, disciplineId, themeId, onClose, onUpdateTask }: a
           {task.description && (
             <div className="mb-6">
               <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Описание</h4>
-              <p className="text-slate-600 dark:text-[#94A3B8] text-sm">{task.description}</p>
+              <p className="text-theme-muted text-sm">{task.description}</p>
             </div>
           )}
           
@@ -238,40 +262,56 @@ function TaskSidePanel({ task, disciplineId, themeId, onClose, onUpdateTask }: a
                 value={url}
                 onChange={handleUrlChange}
                 placeholder="https://youtube.com/... или статья"
-                className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-[#0F1115] border dark:border-[#30343D] rounded-xl px-4 py-3 dark:text-[#F5F5F5] outline-none focus:border-blue-500 transition-colors text-sm"
+                className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors text-sm"
               />
               <button 
                 onClick={handleSummarize}
                 disabled={!url || isSummarizing}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-500/10 dark:hover:bg-blue-500/20 dark:text-blue-400 font-medium transition-colors disabled:opacity-50"
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl font-bold text-white transition-all relative group overflow-hidden disabled:opacity-50"
               >
-                {isSummarizing ? (
-                  <span className="material-symbols-outlined text-sm animate-spin">sync</span>
-                ) : (
-                  <span className="material-symbols-outlined text-sm">auto_awesome</span>
-                )}
-                Сжать для изучения
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-90 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-[radial-gradient(circle_at_center,white_0%,transparent_100%)] transition-opacity"></div>
+                <span className="relative flex items-center justify-center gap-2">
+                  {isSummarizing ? (
+                    <span className="material-symbols-outlined text-[20px] animate-spin">sync</span>
+                  ) : (
+                    <span className="material-symbols-outlined text-[20px]">auto_awesome</span>
+                  )}
+                  ✨ Сжать в конспект
+                </span>
               </button>
             </div>
           </div>
 
           {isSummarizing && (
             <div className="space-y-3 animate-pulse mb-6">
-              <div className="h-4 bg-slate-200 dark:bg-[#30343D] rounded w-3/4"></div>
-              <div className="h-4 bg-slate-200 dark:bg-[#30343D] rounded w-full"></div>
-              <div className="h-4 bg-slate-200 dark:bg-[#30343D] rounded w-5/6"></div>
-              <div className="h-4 bg-slate-200 dark:bg-[#30343D] rounded w-2/3"></div>
+              <div className="h-4 bg-theme-border-border rounded w-3/4"></div>
+              <div className="h-4 bg-theme-border-border rounded w-full"></div>
+              <div className="h-4 bg-theme-border-border rounded w-5/6"></div>
+              <div className="h-4 bg-theme-border-border rounded w-2/3"></div>
             </div>
           )}
 
           {task.summary && !isSummarizing && (
             <div className="mb-6">
-              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1">
-                <span className="material-symbols-outlined text-[16px] text-purple-500">auto_awesome</span>
-                Конспект (Smart Summary)
-              </h4>
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                  <span className="material-symbols-outlined text-[16px] text-purple-500">auto_awesome</span>
+                  Конспект (Smart Summary)
+                </h4>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(task.summary || '');
+                    // Could add a toast here, but simple visual feedback is enough for now
+                  }}
+                  className="text-slate-400 hover:text-blue-500 transition-colors p-1"
+                  title="Скопировать Markdown"
+                >
+                  <span className="material-symbols-outlined text-[18px]">content_copy</span>
+                </button>
+              </div>
               <div className="bg-purple-50/50 dark:bg-purple-500/5 border border-purple-100 dark:border-purple-500/10 p-4 rounded-xl">
-                <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">{task.summary}</p>
+                <p className="text-sm text-theme-text-300 whitespace-pre-wrap">{task.summary}</p>
               </div>
             </div>
           )}
@@ -364,7 +404,7 @@ function AddDisciplineModal({ onClose, onAdd }: any) {
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-900/50 dark:bg-[#010f1f]/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-slate-900/50 dark:bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
       {showConfirm && (
         <ConfirmModal 
           title="Добавление дисциплины" 
@@ -376,97 +416,121 @@ function AddDisciplineModal({ onClose, onAdd }: any) {
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="bg-white dark:bg-[#181B20] border border-slate-200 dark:border-[#30343D] rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl relative overflow-hidden"
+        className="bg-theme-card border border-theme-border rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl relative overflow-hidden"
       >
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-[#F5F5F5]">Новая дисциплина</h2>
-          <button 
-            type="button" 
-            onClick={handleGenerate} 
-            disabled={!name || isGenerating}
-            className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:hover:bg-blue-500/20 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
-          >
-            {isGenerating ? (
-              <span className="material-symbols-outlined text-sm animate-spin">sync</span>
-            ) : (
-              <span className="material-symbols-outlined text-sm">auto_awesome</span>
-            )}
-            AI План
-          </button>
+          <h2 className="text-2xl font-bold text-theme-text">Новая дисциплина</h2>
         </div>
         
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-[#94A3B8] mb-2">Название</label>
-            <input 
-              autoFocus
-              type="text" 
-              value={name}
-              onChange={e => setName(e.target.value)}
-              className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-[#0F1115] border dark:border-[#30343D] rounded-xl px-4 py-3 dark:text-[#F5F5F5] outline-none focus:border-blue-500 transition-colors"
-              placeholder="например, Глубокая работа"
-            />
+        {isGenerating ? (
+          <div className="py-8 text-center space-y-6">
+            <div className="relative w-24 h-24 mx-auto">
+               <div className="absolute inset-0 border-4 border-blue-500/30 rounded-full"></div>
+               <div className="absolute inset-0 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+               <div className="absolute inset-0 flex items-center justify-center">
+                 <span className="material-symbols-outlined text-3xl text-blue-500 animate-pulse">auto_awesome</span>
+               </div>
+            </div>
+            <div>
+               <h3 className="text-lg font-semibold text-theme-text mb-2">Gemini анализирует тему</h3>
+               <p className="text-sm text-theme-muted">и составляет расписание...</p>
+            </div>
+            <div className="space-y-3 pt-4">
+              <div className="h-10 bg-theme-border-800/50 rounded-xl w-full animate-pulse"></div>
+              <div className="h-10 bg-theme-border-800/50 rounded-xl w-5/6 mx-auto animate-pulse"></div>
+              <div className="h-10 bg-theme-border-800/50 rounded-xl w-4/5 mx-auto animate-pulse"></div>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-[#94A3B8] mb-2">Описание</label>
-            <input 
-              type="text" 
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-[#0F1115] border dark:border-[#30343D] rounded-xl px-4 py-3 dark:text-[#F5F5F5] outline-none focus:border-blue-500 transition-colors"
-              placeholder="например, 2 часа без отвлечений"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-[#94A3B8] mb-2">Иконка</label>
-            <div className="flex gap-2 flex-wrap">
-              {icons.map(i => (
-                <button
-                  key={i}
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-theme-text-muted mb-2">Название</label>
+              <input 
+                autoFocus
+                type="text" 
+                value={name}
+                onChange={e => setName(e.target.value)}
+                className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors"
+                placeholder="например, Глубокая работа"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-theme-text-muted mb-2">Описание</label>
+              <input 
+                type="text" 
+                value={description}
+                onChange={e => setDescription(e.target.value)}
+                className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors"
+                placeholder="например, 2 часа без отвлечений"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-theme-text-muted mb-2">Иконка</label>
+              <div className="flex gap-2 flex-wrap">
+                {icons.map(i => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setIcon(i)}
+                    className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all border ${
+                      icon === i ? 'bg-blue-50 dark:bg-blue-500/20 border-2 border-blue-500 text-blue-600 dark:text-blue-400' : 'bg-theme-bg border-theme-border text-slate-500 hover:border-slate-300 dark:hover:border-slate-500'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-xl">{i}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-theme-text-muted mb-2">Цвет</label>
+              <div className="flex gap-3">
+                {colors.map(c => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setColor(c)}
+                    className={`w-8 h-8 rounded-full transition-all ${
+                      color === c ? 'ring-2 ring-offset-2 ring-offset-white dark:ring-offset-theme-card scale-110' : 'hover:scale-110'
+                    }`}
+                    style={{ backgroundColor: c, '--tw-ring-color': c } as any}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 pt-6 border-t border-theme-border mt-6">
+              <button 
+                type="button"
+                onClick={handleGenerate}
+                disabled={!name}
+                className="w-full py-4 rounded-xl font-bold transition-all relative group overflow-hidden disabled:opacity-50"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-90 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-[radial-gradient(circle_at_center,white_0%,transparent_100%)] transition-opacity"></div>
+                <span className="relative flex items-center justify-center gap-2 text-white">
+                  <span className="material-symbols-outlined text-[20px]">auto_awesome</span>
+                  Сгенерировать план с ИИ
+                </span>
+              </button>
+
+              <div className="flex gap-3">
+                <button 
                   type="button"
-                  onClick={() => setIcon(i)}
-                  className={`w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center transition-all border ${
-                    icon === i ? 'bg-blue-50 dark:bg-blue-500/20 border-2 border-blue-500 text-blue-600 dark:text-blue-400' : 'bg-slate-50 dark:bg-[#0F1115] border-slate-200 dark:border-[#30343D] text-slate-500 hover:border-slate-300 dark:hover:border-slate-500'
-                  }`}
+                  onClick={onClose}
+                  className="flex-1 py-3 px-4 rounded-xl text-theme-muted font-medium hover:bg-theme-border-bg transition-colors"
                 >
-                  <span className="material-symbols-outlined text-xl">{i}</span>
+                  Отмена
                 </button>
-              ))}
+                <button 
+                  type="submit"
+                  disabled={!name}
+                  className="flex-1 py-3 px-4 rounded-xl bg-theme-border-bg hover:bg-slate-200 dark:hover:bg-slate-800 text-theme-text border border-theme-border font-medium transition-colors disabled:opacity-50"
+                >
+                  Создать пустую
+                </button>
+              </div>
             </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-[#94A3B8] mb-2">Цвет</label>
-            <div className="flex gap-3">
-              {colors.map(c => (
-                <button
-                  key={c}
-                  type="button"
-                  onClick={() => setColor(c)}
-                  className={`w-8 h-8 rounded-full transition-all ${
-                    color === c ? 'ring-2 ring-offset-2 ring-offset-white dark:ring-offset-[#181B20] scale-110' : 'hover:scale-110'
-                  }`}
-                  style={{ backgroundColor: c, '--tw-ring-color': c } as any}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="flex gap-3 pt-4 border-t border-slate-200 dark:border-[#30343D] mt-6">
-            <button 
-              type="button"
-              onClick={onClose}
-              className="flex-1 py-3 px-4 rounded-xl text-slate-600 dark:text-[#94A3B8] font-medium hover:bg-slate-100 dark:hover:bg-[#0F1115] transition-colors"
-            >
-              Отмена
-            </button>
-            <button 
-              type="submit"
-              disabled={!name}
-              className="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors disabled:opacity-50"
-            >
-              Создать
-            </button>
-          </div>
-        </form>
+          </form>
+        )}
       </motion.div>
     </div>
   );

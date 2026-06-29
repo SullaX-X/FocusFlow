@@ -14,6 +14,7 @@ import CommandPalette from './components/CommandPalette';
 import FocusMode from './components/FocusMode';
 import TaskSidebar from './components/TaskSidebar';
 import Onboarding from './components/Onboarding';
+import UserMenu from './components/UserMenu';
 import { Discipline, Tab, Task } from './types';
 import { LayoutDashboard, CheckSquare, BarChart2, Settings as SettingsIcon } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -26,6 +27,7 @@ export default function App() {
   const [isCommandOpen, setIsCommandOpen] = useState(false);
   const [isTaskSidebarOpen, setIsTaskSidebarOpen] = useState(false);
   const [focusTask, setFocusTask] = useState<Task | null>(null);
+  const [isHydrating, setIsHydrating] = useState(true);
 
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState(() => {
     return localStorage.getItem('focusflow_onboarding') === 'true';
@@ -55,53 +57,66 @@ export default function App() {
     setHasSeenOnboarding(true);
   };
 
+  const pullData = async () => {
+    const webhookUrl = localStorage.getItem('focusflow_webhook_url');
+    if (webhookUrl && navigator.onLine) {
+      setSyncStatus('syncing');
+      try {
+        const remoteData = await pullFromSheets(webhookUrl);
+        if (remoteData && Array.isArray(remoteData) && remoteData.length > 0) {
+          setDisciplines(prev => {
+            const merged = [...prev];
+            remoteData.forEach((rDisc: any) => {
+              const lDisc = merged.find(d => d.id === rDisc.id);
+              if (lDisc) {
+                lDisc.history = { ...rDisc.history, ...lDisc.history };
+              } else {
+                merged.push(rDisc);
+              }
+            });
+            previousDisciplines.current = merged;
+            return merged;
+          });
+        }
+      } catch (e) {
+        console.warn('Silent sync error (CORS/Deployment issue):', e);
+      } finally {
+        setSyncStatus('idle');
+      }
+    } else {
+      previousDisciplines.current = disciplines;
+    }
+  };
+
   useEffect(() => {
-    const handleOnline = () => setSyncStatus('idle'); // will trigger sync on next change or we could force it
+    const handleOnline = () => setSyncStatus('idle');
     const handleOffline = () => setSyncStatus('offline');
+    const handleFocus = () => pullData();
+    
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
+    window.addEventListener('focus', handleFocus);
+    
     if (!navigator.onLine) setSyncStatus('offline');
+    
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('focus', handleFocus);
     };
   }, []);
 
   useEffect(() => {
-    const pullInitialData = async () => {
-      const webhookUrl = localStorage.getItem('focusflow_webhook_url');
-      if (webhookUrl && navigator.onLine) {
-        setSyncStatus('syncing');
-        try {
-          const remoteData = await pullFromSheets(webhookUrl);
-          if (remoteData && Array.isArray(remoteData) && remoteData.length > 0) {
-            setDisciplines(prev => {
-              const merged = [...prev];
-              remoteData.forEach((rDisc: any) => {
-                const lDisc = merged.find(d => d.id === rDisc.id);
-                if (lDisc) {
-                  lDisc.history = { ...rDisc.history, ...lDisc.history };
-                } else {
-                  merged.push(rDisc);
-                }
-              });
-              previousDisciplines.current = merged;
-              return merged;
-            });
-          }
-        } catch (e) {
-          console.warn('Silent sync error (CORS/Deployment issue):', e);
-        } finally {
-          setSyncStatus('idle');
-        }
-      } else {
-        previousDisciplines.current = disciplines;
-      }
+    const init = async () => {
+      await pullData();
+      setIsHydrating(false);
     };
-    pullInitialData();
+    init();
   }, []);
 
   useEffect(() => {
+    if (isHydrating) return;
+    
     localStorage.setItem('focusflow_disciplines', JSON.stringify(disciplines));
     
     if (isRollingBack.current) {
@@ -279,24 +294,46 @@ export default function App() {
     setFocusTask(task);
   };
 
+  if (isHydrating) {
+    return (
+      <div className="min-h-screen bg-theme-bg flex flex-col items-center justify-center p-6 text-theme-text transition-colors duration-300">
+        <div className="max-w-md w-full text-center space-y-6">
+          <div className="flex justify-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <h2 className="text-xl font-bold">Загрузка данных...</h2>
+          <p className="text-sm text-theme-muted">
+            Синхронизация с облаком
+          </p>
+          <div className="space-y-3 animate-pulse mt-8">
+            <div className="h-16 bg-theme-card rounded-2xl w-full"></div>
+            <div className="h-16 bg-theme-card rounded-2xl w-full"></div>
+            <div className="h-16 bg-theme-card rounded-2xl w-full"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-screen w-full bg-slate-50 dark:bg-[#051424] text-slate-900 dark:text-[#d4e4fa] font-sans overflow-hidden transition-colors duration-300">
+    <div className="flex h-screen w-full bg-theme-bg text-theme-text font-sans overflow-hidden transition-colors duration-300">
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <main className="flex-1 overflow-y-auto pb-20 md:pb-0 relative">
+        <UserMenu />
         {syncStatus !== 'idle' && (
-          <div className="absolute top-4 right-4 bg-white/80 dark:bg-[#122131]/80 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 border border-slate-200 dark:border-[#273647] shadow-sm z-50">
-            {syncStatus === 'syncing' && <span className="material-symbols-outlined text-sm animate-spin text-slate-500 dark:text-[#908fa0]">sync</span>}
+          <div className="absolute top-4 right-16 bg-white/80 dark:bg-theme-card/80 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-2 border border-theme-border shadow-sm z-50">
+            {syncStatus === 'syncing' && <span className="material-symbols-outlined text-sm animate-spin text-theme-muted">sync</span>}
             {syncStatus === 'success' && <span className="material-symbols-outlined text-sm text-green-500">cloud_done</span>}
             {syncStatus === 'error' && <span className="material-symbols-outlined text-sm text-red-500">cloud_off</span>}
             {syncStatus === 'offline' && <span className="material-symbols-outlined text-sm text-orange-500">wifi_off</span>}
-            <span className={`text-xs font-medium ${syncStatus === 'error' ? 'text-red-500' : syncStatus === 'offline' ? 'text-orange-500' : 'text-slate-600 dark:text-[#908fa0]'}`}>
+            <span className={`text-xs font-medium ${syncStatus === 'error' ? 'text-red-500' : syncStatus === 'offline' ? 'text-orange-500' : 'text-theme-muted'}`}>
               {syncStatus === 'syncing' ? 'Синхронизация...' : syncStatus === 'success' ? 'Сохранено ☁️✓' : syncStatus === 'offline' ? 'Оффлайн режим. Задачи сохранены' : 'Ошибка синхронизации'}
             </span>
           </div>
         )}
         
         {activeTab === 'dashboard' && <Dashboard disciplines={disciplines} toggleDay={toggleDay} startFocus={startFocus} />}
-        {activeTab === 'disciplines' && <Disciplines disciplines={disciplines} toggleDay={toggleDay} addDiscipline={addDiscipline} deleteDiscipline={deleteDiscipline} updateTask={updateTask} />}
+        {activeTab === 'disciplines' && <Disciplines disciplines={disciplines} toggleDay={toggleDay} addDiscipline={addDiscipline} deleteDiscipline={deleteDiscipline} updateTask={updateTask} startFocus={startFocus} />}
         {activeTab === 'statistics' && <Statistics disciplines={disciplines} />}
         {activeTab === 'settings' && <Settings />}
       </main>
@@ -309,7 +346,7 @@ export default function App() {
       {!hasSeenOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
 
       {/* Mobile Nav */}
-      <nav className="md:hidden fixed bottom-0 w-full bg-white/90 dark:bg-[#010f1f]/90 backdrop-blur-md border-t border-slate-200 dark:border-[#273647] flex justify-around items-center p-2 z-50">
+      <nav className="md:hidden fixed bottom-0 w-full bg-theme-sidebar/90 backdrop-blur-md border-t border-theme-sidebar-border flex justify-around items-center p-2 z-50">
         <MobileNavItem icon={LayoutDashboard} label="Главная" active={activeTab === 'dashboard'} onClick={() => setActiveTab('dashboard')} />
         <MobileNavItem icon={CheckSquare} label="Дисциплины" active={activeTab === 'disciplines'} onClick={() => setActiveTab('disciplines')} />
         <MobileNavItem icon={BarChart2} label="Статистика" active={activeTab === 'statistics'} onClick={() => setActiveTab('statistics')} />
@@ -324,7 +361,7 @@ function MobileNavItem({ icon: Icon, label, active, onClick }: any) {
     <button
       onClick={onClick}
       className={`flex flex-col items-center p-2 rounded-lg transition-all duration-200 ${
-        active ? 'text-blue-600 dark:text-[#c0c1ff]' : 'text-slate-500 dark:text-[#908fa0]'
+        active ? 'text-theme-accent' : 'text-theme-muted'
       }`}
     >
       <Icon className="w-6 h-6 mb-1" />

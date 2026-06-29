@@ -6,7 +6,13 @@ import { useTheme } from '../ThemeContext';
 export default function CommandPalette({ isOpen, onClose, disciplines }: { isOpen: boolean; onClose: () => void, disciplines: Discipline[] }) {
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const { toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  
+  const cycleTheme = () => {
+    const themes: ('light' | 'dark' | 'nordic' | 'latte' | 'oled' | 'system')[] = ['light', 'dark', 'nordic', 'latte', 'oled', 'system'];
+    const nextTheme = themes[(themes.indexOf(theme) + 1) % themes.length];
+    setTheme(nextTheme);
+  };
 
 
   useEffect(() => {
@@ -51,15 +57,15 @@ export default function CommandPalette({ isOpen, onClose, disciplines }: { isOpe
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-900/20 dark:bg-black/40 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            className="fixed top-1/4 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-white dark:bg-[#181B20] border border-slate-200 dark:border-[#30343D] shadow-2xl rounded-2xl z-50 overflow-hidden flex flex-col"
+            className="fixed top-1/4 left-1/2 -translate-x-1/2 w-full max-w-2xl bg-theme-card border border-theme-border shadow-2xl rounded-2xl z-50 overflow-hidden flex flex-col"
           >
-            <div className="flex items-center gap-3 px-4 py-4 border-b border-slate-100 dark:border-[#30343D]">
+            <div className="flex items-center gap-3 px-4 py-4 border-b border-theme-border">
               <span className="material-symbols-outlined text-slate-400">search</span>
               <input
                 ref={inputRef}
@@ -67,14 +73,14 @@ export default function CommandPalette({ isOpen, onClose, disciplines }: { isOpe
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Искать задачи, дисциплины или команды..."
-                className="w-full bg-transparent text-slate-900 dark:text-[#F5F5F5] outline-none text-lg"
+                className="w-full bg-transparent text-theme-text outline-none text-lg"
               />
-              <div className="bg-slate-100 dark:bg-[#0F1115] text-slate-500 dark:text-[#94A3B8] text-xs px-2 py-1 rounded font-mono">ESC</div>
+              <div className="bg-theme-border-bg text-theme-muted text-xs px-2 py-1 rounded font-mono">ESC</div>
             </div>
 
             <div className="max-h-[60vh] overflow-y-auto p-2">
               {query && filteredTasks.length === 0 ? (
-                <div className="p-4 text-center text-slate-500 dark:text-[#94A3B8]">Ничего не найдено.</div>
+                <div className="p-4 text-center text-theme-muted">Ничего не найдено.</div>
               ) : (
                 <>
                   {filteredTasks.length > 0 && (
@@ -83,11 +89,11 @@ export default function CommandPalette({ isOpen, onClose, disciplines }: { isOpe
                       {filteredTasks.map(t => (
                         <button key={t.task.id} className="w-full text-left px-3 py-3 hover:bg-blue-50 dark:hover:bg-blue-500/10 rounded-xl flex items-center justify-between group transition-colors">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded bg-slate-100 dark:bg-[#0F1115] flex items-center justify-center text-slate-500">
+                            <div className="w-8 h-8 rounded bg-theme-border-bg flex items-center justify-center text-slate-500">
                               <span className="material-symbols-outlined text-sm">task_alt</span>
                             </div>
                             <div>
-                              <div className="text-sm font-medium text-slate-900 dark:text-[#F5F5F5] group-hover:text-blue-600 dark:group-hover:text-blue-400">{t.task.title}</div>
+                              <div className="text-sm font-medium text-theme-text group-hover:text-blue-600 dark:group-hover:text-blue-400">{t.task.title}</div>
                               <div className="text-xs text-slate-500">{t.discipline.name}</div>
                             </div>
                           </div>
@@ -100,24 +106,24 @@ export default function CommandPalette({ isOpen, onClose, disciplines }: { isOpe
                   {!query && (
                     <div>
                       <div className="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Быстрые действия</div>
-                      <button className="w-full text-left px-3 py-3 hover:bg-slate-50 dark:hover:bg-[#0F1115] rounded-xl flex items-center gap-3 group transition-colors" onClick={() => {
+                      <button className="w-full text-left px-3 py-3 hover:bg-theme-bg-bg rounded-xl flex items-center gap-3 group transition-colors" onClick={() => {
                         onClose();
                         window.dispatchEvent(new KeyboardEvent('keydown', { key: 'n' }));
                       }}>
-                        <div className="w-8 h-8 rounded bg-slate-100 dark:bg-[#30343D] flex items-center justify-center text-slate-500">
+                        <div className="w-8 h-8 rounded bg-theme-border flex items-center justify-center text-slate-500">
                           <span className="material-symbols-outlined text-sm">add</span>
                         </div>
-                        <div className="text-sm font-medium text-slate-900 dark:text-[#F5F5F5]">Создать задачу...</div>
-                        <div className="ml-auto bg-slate-100 dark:bg-[#30343D] text-slate-500 text-xs px-2 py-1 rounded font-mono">N</div>
+                        <div className="text-sm font-medium text-theme-text">Создать задачу...</div>
+                        <div className="ml-auto bg-theme-border text-slate-500 text-xs px-2 py-1 rounded font-mono">N</div>
                       </button>
-                      <button className="w-full text-left px-3 py-3 hover:bg-slate-50 dark:hover:bg-[#0F1115] rounded-xl flex items-center gap-3 group transition-colors" onClick={() => {
+                      <button className="w-full text-left px-3 py-3 hover:bg-theme-bg-bg rounded-xl flex items-center gap-3 group transition-colors" onClick={() => {
                         onClose();
-                        toggleTheme();
+                        cycleTheme();
                       }}>
-                        <div className="w-8 h-8 rounded bg-slate-100 dark:bg-[#30343D] flex items-center justify-center text-slate-500">
+                        <div className="w-8 h-8 rounded bg-theme-border flex items-center justify-center text-slate-500">
                           <span className="material-symbols-outlined text-sm">dark_mode</span>
                         </div>
-                        <div className="text-sm font-medium text-slate-900 dark:text-[#F5F5F5]">Переключить тему</div>
+                        <div className="text-sm font-medium text-theme-text">Переключить тему</div>
                       </button>
                     </div>
                   )}

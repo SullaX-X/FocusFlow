@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InboxItem } from '../types';
 
@@ -61,21 +61,21 @@ export default function Inbox({ isOpen, onClose }: { isOpen: boolean; onClose: (
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-900/20 dark:bg-black/40 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white dark:bg-[#181B20] border border-slate-200 dark:border-[#30343D] shadow-2xl rounded-2xl p-6 z-50 overflow-hidden flex flex-col max-h-[80vh]"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-theme-card border border-theme-border shadow-2xl rounded-2xl p-6 z-50 overflow-hidden flex flex-col max-h-[80vh]"
           >
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400">
                 <span className="material-symbols-outlined">inbox</span>
               </div>
               <div>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-[#F5F5F5]">Быстрый Инбокс</h2>
-                <p className="text-sm text-slate-500 dark:text-[#94A3B8]">Brain Dump (Разгрузка мозга)</p>
+                <h2 className="text-xl font-bold text-theme-text">Быстрый Инбокс</h2>
+                <p className="text-sm text-theme-muted">Brain Dump (Разгрузка мозга)</p>
               </div>
             </div>
 
@@ -86,7 +86,7 @@ export default function Inbox({ isOpen, onClose }: { isOpen: boolean; onClose: (
                 value={text}
                 onChange={e => setText(e.target.value)}
                 placeholder="Что у вас на уме?"
-                className="w-full bg-slate-50 dark:bg-[#0F1115] border border-slate-200 dark:border-[#30343D] text-slate-900 dark:text-[#F5F5F5] rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition-colors"
+                className="w-full bg-theme-bg border border-theme-border text-theme-text rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition-colors"
               />
               <button 
                 type="submit"
@@ -99,14 +99,14 @@ export default function Inbox({ isOpen, onClose }: { isOpen: boolean; onClose: (
 
             <div className="flex-1 overflow-y-auto space-y-2">
               {items.length === 0 ? (
-                <div className="text-center py-8 text-slate-500 dark:text-[#94A3B8] text-sm">
+                <div className="text-center py-8 text-theme-muted text-sm">
                   Инбокс пуст. Запишите сюда свои мысли.
                 </div>
               ) : (
                 items.map(item => (
-                  <div key={item.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-[#0F1115] group transition-colors">
+                  <div key={item.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-theme-bg-bg group transition-colors">
                     <span className="material-symbols-outlined text-slate-400 mt-0.5 text-sm">notes</span>
-                    <p className="flex-1 text-sm text-slate-700 dark:text-[#F5F5F5]">{item.text}</p>
+                    <p className="flex-1 text-sm text-theme-text">{item.text}</p>
                     <button 
                       onClick={() => handleDelete(item.id)}
                       className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 transition-opacity"

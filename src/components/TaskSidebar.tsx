@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Discipline, Task } from '../types';
 
@@ -45,41 +45,41 @@ export default function TaskSidebar({ isOpen, onClose, onSave, disciplines }: an
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-900/20 dark:bg-black/40 backdrop-blur-sm z-[100]"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
           />
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-[#181B20] border-l border-slate-200 dark:border-[#30343D] shadow-2xl z-[101] flex flex-col"
+            className="fixed inset-y-0 right-0 w-full max-w-md bg-theme-card border-l border-theme-border shadow-2xl z-[101] flex flex-col"
           >
-            <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-[#30343D]">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-[#F5F5F5]">Новая задача</h2>
-              <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-[#30343D] rounded-full transition-colors">
+            <div className="flex items-center justify-between p-6 border-b border-theme-border">
+              <h2 className="text-xl font-bold text-theme-text">Новая задача</h2>
+              <button onClick={onClose} className="p-2 text-slate-400 hover:bg-theme-border-border rounded-full transition-colors">
                 <span className="material-symbols-outlined text-xl">close</span>
               </button>
             </div>
 
             <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-6 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-[#94A3B8] mb-2">Название задачи</label>
+                <label className="block text-sm font-medium text-theme-text-muted mb-2">Название задачи</label>
                 <input 
                   autoFocus
                   type="text" 
                   value={title}
                   onChange={e => setTitle(e.target.value)}
-                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-[#0F1115] border dark:border-[#30343D] rounded-xl px-4 py-3 dark:text-[#F5F5F5] outline-none focus:border-blue-500 transition-colors"
+                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors"
                   placeholder="Что нужно сделать?"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-[#94A3B8] mb-2">Дисциплина</label>
+                <label className="block text-sm font-medium text-theme-text-muted mb-2">Дисциплина</label>
                 <select
                   value={selectedDiscipline}
                   onChange={e => setSelectedDiscipline(e.target.value)}
-                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-[#0F1115] border dark:border-[#30343D] rounded-xl px-4 py-3 dark:text-[#F5F5F5] outline-none focus:border-blue-500 transition-colors appearance-none"
+                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors appearance-none"
                 >
                   {disciplines.map((d: Discipline) => (
                     <option key={d.id} value={d.id}>{d.name}</option>
@@ -88,13 +88,13 @@ export default function TaskSidebar({ isOpen, onClose, onSave, disciplines }: an
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-[#94A3B8] mb-2">Уровень энергии</label>
+                <label className="block text-sm font-medium text-theme-text-muted mb-2">Уровень энергии</label>
                 <div className="flex gap-3">
                   <button
                     type="button"
                     onClick={() => setEnergy('high')}
                     className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border transition-colors ${
-                      energy === 'high' ? 'bg-orange-50 border-orange-200 text-orange-700 dark:bg-orange-500/20 dark:border-orange-500/50 dark:text-orange-400' : 'bg-slate-50 border-slate-200 text-slate-500 dark:bg-[#0F1115] dark:border-[#30343D] hover:bg-slate-100 dark:hover:bg-[#30343D]'
+                      energy === 'high' ? 'bg-orange-50 border-orange-200 text-orange-700 dark:bg-orange-500/20 dark:border-orange-500/50 dark:text-orange-400' : 'bg-slate-50 border-slate-200 text-slate-500 dark:bg-theme-bg dark:border-theme-border hover:bg-theme-border-border'
                     }`}
                   >
                     🧠 Высокая
@@ -103,7 +103,7 @@ export default function TaskSidebar({ isOpen, onClose, onSave, disciplines }: an
                     type="button"
                     onClick={() => setEnergy('low')}
                     className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border transition-colors ${
-                      energy === 'low' ? 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-500/20 dark:border-emerald-500/50 dark:text-emerald-400' : 'bg-slate-50 border-slate-200 text-slate-500 dark:bg-[#0F1115] dark:border-[#30343D] hover:bg-slate-100 dark:hover:bg-[#30343D]'
+                      energy === 'low' ? 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-500/20 dark:border-emerald-500/50 dark:text-emerald-400' : 'bg-slate-50 border-slate-200 text-slate-500 dark:bg-theme-bg dark:border-theme-border hover:bg-theme-border-border'
                     }`}
                   >
                     🔋 Низкая
@@ -113,33 +113,33 @@ export default function TaskSidebar({ isOpen, onClose, onSave, disciplines }: an
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-[#94A3B8] mb-2">Ссылка на материал (опционально)</label>
+                <label className="block text-sm font-medium text-theme-text-muted mb-2">Ссылка на материал (опционально)</label>
                 <input 
                   type="url" 
                   value={contentUrl}
                   onChange={e => setContentUrl(e.target.value)}
-                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-[#0F1115] border dark:border-[#30343D] rounded-xl px-4 py-3 dark:text-[#F5F5F5] outline-none focus:border-blue-500 transition-colors"
+                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors"
                   placeholder="https://..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-[#94A3B8] mb-2">Заметки</label>
+                <label className="block text-sm font-medium text-theme-text-muted mb-2">Заметки</label>
                 <textarea 
                   value={description}
                   onChange={e => setDescription(e.target.value)}
                   rows={4}
-                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-[#0F1115] border dark:border-[#30343D] rounded-xl px-4 py-3 dark:text-[#F5F5F5] outline-none focus:border-blue-500 transition-colors resize-none"
+                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors resize-none"
                   placeholder="Дополнительная информация..."
                 />
               </div>
             </form>
             
-            <div className="p-6 border-t border-slate-200 dark:border-[#30343D] flex gap-3">
+            <div className="p-6 border-t border-theme-border flex gap-3">
               <button 
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-3 px-4 rounded-xl text-slate-600 dark:text-[#94A3B8] font-medium hover:bg-slate-100 dark:hover:bg-[#0F1115] transition-colors"
+                className="flex-1 py-3 px-4 rounded-xl text-theme-muted font-medium hover:bg-theme-border-bg transition-colors"
               >
                 Отмена
               </button>

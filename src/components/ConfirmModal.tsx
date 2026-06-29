@@ -14,15 +14,15 @@ export default function ConfirmModal({ title, message, onConfirm, onCancel }: Pr
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white dark:bg-[#122131] border border-slate-200 dark:border-[#273647] rounded-3xl p-6 max-w-sm w-full shadow-2xl"
+        className="bg-theme-card border border-theme-border rounded-3xl p-6 max-w-sm w-full shadow-2xl"
       >
-        <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">{title}</h3>
-        <p className="text-slate-500 dark:text-[#908fa0] mb-6">{message}</p>
+        <h3 className="text-xl font-bold text-theme-text mb-2">{title}</h3>
+        <p className="text-theme-muted mb-6">{message}</p>
         
         <div className="flex justify-end gap-3">
           <button 
             onClick={onCancel}
-            className="px-4 py-2 text-slate-600 dark:text-[#908fa0] hover:bg-slate-100 dark:hover:bg-[#1c2b3c] rounded-xl font-medium transition-colors"
+            className="px-4 py-2 text-theme-muted hover:bg-theme-border-border rounded-xl font-medium transition-colors"
           >
             Отмена
           </button>
