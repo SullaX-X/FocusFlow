@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  
+
   --color-theme-bg: var(--bg);
   --color-theme-sidebar: var(--sidebar);
   --color-theme-sidebar-border: var(--sidebar-border);
@@ -14,71 +14,154 @@
   --color-theme-accent: var(--accent);
   --color-theme-success: var(--success);
 
-  --color-disc-py: #EAB308;
+  --color-disc-py: #eab308;
   --color-disc-sql: var(--accent);
-  --color-disc-math: #A855F7;
-  --color-disc-eng: #22C55E;
+  --color-disc-math: #a855f7;
+  --color-disc-eng: #22c55e;
+
+  --animate-breathe: breathe 8s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1) rotate(-90deg);
+  }
+  50% {
+    transform: scale(1.05) rotate(-90deg);
+  }
 }
 
 @layer base {
-  :root, html.light {
-    --bg: #F8FAFC;
-    --sidebar: #FFFFFF;
-    --card: #FFFFFF;
-    --border: #E2E8F0;
-    --sidebar-border: #E2E8F0;
-    --text-main: #0F172A;
-    --text-muted: #64748B;
-    --accent: #2563EB;
-    --success: #10B981;
+  :root,
+  html.light {
+    --bg: #f8fafc;
+    --sidebar: #ffffff;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --sidebar-border: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --accent: #2563eb;
+    --success: #10b981;
+    --shadow-premium:
+      0 2px 4px rgba(0, 0, 0, 0.02), 0 10px 20px rgba(0, 0, 0, 0.04),
+      0 20px 40px rgba(0, 0, 0, 0.04);
   }
 
   html.dark {
-    --bg: #0F172A;
-    --sidebar: #1E293B;
-    --card: #1E293B;
-    --border: #1E293B;
-    --sidebar-border: #1E293B;
-    --text-main: #F1F5F9;
-    --text-muted: #94A3B8;
-    --accent: #3B82F6;
-    --success: #10B981;
+    --bg: #0f172a;
+    --sidebar: #1e293b;
+    --card: #1e293b;
+    --border: #334155;
+    --sidebar-border: #334155;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --accent: #2563eb;
+    --success: #10b981;
+    --shadow-premium:
+      0 2px 4px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.3),
+      0 20px 40px rgba(0, 0, 0, 0.4);
   }
 
   html.nordic {
-    --bg: #2E3440;
-    --sidebar: #242933;
-    --card: #3B4252;
-    --border: #3B4252;
-    --sidebar-border: #242933;
-    --text-main: #ECEFF4;
-    --text-muted: #81A1C1;
-    --accent: #88C0D0;
-    --success: #A3BE8C;
+    --bg: #2e3440;
+    --sidebar: #3b4252;
+    --card: #3b4252;
+    --border: #4c566a;
+    --sidebar-border: #4c566a;
+    --text-main: #eceff4;
+    --text-muted: #81a1c1;
+    --accent: #88c0d0;
+    --success: #a3be8c;
+    --shadow-premium:
+      0 2px 4px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.3),
+      0 20px 40px rgba(0, 0, 0, 0.4);
   }
 
   html.latte {
-    --bg: #F5F1EA;
-    --sidebar: #EDE6D9;
-    --card: #FFFFFF;
-    --border: #E6DFD3;
-    --sidebar-border: #EDE6D9;
+    --bg: #f5f1ea;
+    --sidebar: #ffffff;
+    --card: #ffffff;
+    --border: #e6dfd3;
+    --sidebar-border: #e6dfd3;
     --text-main: #433422;
-    --text-muted: #8C8273;
-    --accent: #BC6C25;
-    --success: #6B8E6B;
+    --text-muted: #8c8273;
+    --accent: #bc6c25;
+    --success: #6b8e6b;
+    --shadow-premium:
+      0 2px 4px rgba(67, 52, 34, 0.02), 0 10px 20px rgba(67, 52, 34, 0.04),
+      0 20px 40px rgba(67, 52, 34, 0.04);
   }
 
   html.oled {
     --bg: #000000;
-    --sidebar: #000000;
-    --card: #0A0A0A;
-    --border: #1A1A1A;
-    --sidebar-border: #1A1A1A;
-    --text-main: #FFFFFF;
+    --sidebar: #0a0a0a;
+    --card: #0a0a0a;
+    --border: #1a1a1a;
+    --sidebar-border: #1a1a1a;
+    --text-main: #ffffff;
     --text-muted: #666666;
-    --accent: #39FF14;
-    --success: #39FF14;
+    --accent: #39ff14;
+    --success: #39ff14;
+    --shadow-premium:
+      0 2px 4px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.5),
+      0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  html.liquid-glass {
+    --bg: #0f172a;
+    --sidebar: rgba(15, 23, 42, 0.3);
+    --card: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.2);
+    --sidebar-border: rgba(255, 255, 255, 0.1);
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --accent: #2563eb;
+    --success: #10b981;
+    --shadow-premium:
+      0 2px 4px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.2),
+      0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  html.iman_love {
+    --bg: #fff5f7;
+    --sidebar: #fce7f3;
+    --card: #fce7f3;
+    --border: #fbcfe8;
+    --sidebar-border: #fbcfe8;
+    --text-main: #701a75;
+    --text-muted: #9d174d;
+    --accent: #ec4899;
+    --success: #10b981;
+    --shadow-premium:
+      0 2px 4px rgba(236, 72, 153, 0.05), 0 10px 20px rgba(236, 72, 153, 0.1),
+      0 20px 40px rgba(236, 72, 153, 0.1);
+  }
+  html.dimoon {
+    --bg: #050714;
+    --sidebar: #0b0e20;
+    --card: #0b0e20;
+    --border: #1e244a;
+    --sidebar-border: #1e244a;
+    --text-main: #e2e8f0;
+    --text-muted: #828db9;
+    --accent: #fde047; /* Bright moon yellow */
+    --success: #a3e635; /* Lime-ish */
+    --shadow-premium: 4px 4px 0px 0px rgba(253, 224, 71, 0.4);
+  }
+
+  html.dimoon-blue {
+    --bg: #020617;
+    --sidebar: #0f172a;
+    --card: #0f172a;
+    --border: #1e293b;
+    --sidebar-border: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --success: #34d399;
+    --shadow-premium: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
   }
 }
 
@@ -86,5 +169,487 @@ html {
   font-family: var(--font-sans);
   background-color: var(--bg);
   color: var(--text-main);
+  overflow-x: hidden;
 }
 
+body {
+  overflow-x: hidden;
+}
+
+.bg-theme-sidebar,
+.bg-theme-card,
+.glass-panel {
+  box-shadow: var(--shadow-premium);
+  background-color: var(--card);
+}
+.bg-theme-sidebar {
+  background-color: var(--sidebar);
+}
+
+html.liquid-glass .bg-theme-sidebar,
+html.liquid-glass .bg-theme-card,
+html.liquid-glass .glass-panel {
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+    var(--shadow-premium);
+}
+
+/* Deep Tactile Button */
+.btn-tactile {
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 15px rgba(var(--color-theme-accent), 0);
+}
+
+.btn-tactile:hover {
+  transform: scale(1.02) translateY(-1px);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 20px rgba(37, 99, 235, 0.4); /* assuming accent glow */
+}
+
+.btn-tactile:active {
+  transform: scale(0.95);
+  box-shadow:
+    0 1px 2px 0 rgba(0, 0, 0, 0.05),
+    inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes aiPan {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.btn-ai {
+  position: relative !important;
+  z-index: 1 !important;
+  background-clip: padding-box !important;
+  border: 2px solid transparent !important;
+}
+
+/* The animated gradient border */
+.btn-ai::before {
+  content: "";
+  position: absolute;
+  inset: -2px; /* Cover the transparent border */
+  border-radius: inherit;
+  padding: 2px; /* Width of the border */
+
+  background: linear-gradient(
+    90deg,
+    #4285f4,
+    #ea4335,
+    #fbbc05,
+    #34a853,
+    #4285f4
+  );
+  background-size: 200% 100%;
+
+  /* Mask to show only the padding area (the border) */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  z-index: 2; /* On top of the button text/background */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* The outer glow */
+.btn-ai::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+
+  background: linear-gradient(
+    90deg,
+    #4285f4,
+    #ea4335,
+    #fbbc05,
+    #34a853,
+    #4285f4
+  );
+  background-size: 200% 100%;
+
+  z-index: -1; /* Behind the button background */
+  filter: blur(12px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.btn-ai:not(:disabled):hover::before,
+.btn-ai:not(:disabled):hover::after {
+  opacity: 1;
+  animation: aiPan 2s linear infinite;
+}
+
+html.dark body::before {
+  content: "";
+  position: fixed;
+  top: -10%;
+  left: -10%;
+  width: 40vw;
+  height: 40vh;
+  border-radius: 50%;
+  background: #3b82f6;
+  filter: blur(120px);
+  opacity: 0.2;
+  z-index: -1;
+  pointer-events: none;
+}
+
+html.dark body::after {
+  content: "";
+  position: fixed;
+  bottom: 10%;
+  right: -5%;
+  width: 35vw;
+  height: 35vh;
+  border-radius: 50%;
+  background: #4f46e5;
+  filter: blur(120px);
+  opacity: 0.2;
+  z-index: -1;
+  pointer-events: none;
+}
+
+html.dark #root::before {
+  content: "";
+  position: fixed;
+  top: 40%;
+  left: 30%;
+  width: 20vw;
+  height: 20vh;
+  border-radius: 50%;
+  background: #10b981;
+  filter: blur(100px);
+  opacity: 0.2;
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes dimoonFloat {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(7deg); }
+  100% { transform: translateY(-30px) rotate(15deg); }
+}
+
+@keyframes starsTwinkle {
+  0% { background-position: 0 0; }
+  100% { background-position: -40px 40px; }
+}
+
+@keyframes dimoonPulse {
+  0%, 100% { opacity: 0.2; filter: drop-shadow(0 0 10px var(--accent)) blur(1px); }
+  50% { opacity: 0.8; filter: drop-shadow(0 0 40px var(--accent)) blur(0px); }
+}
+
+@keyframes moonRiseSet {
+  0% { transform: translateY(100vh) rotate(-20deg) scale(0.8); opacity: 0; filter: drop-shadow(0 0 10px var(--accent)); }
+  20% { opacity: 1; }
+  50% { transform: translateY(-5vh) rotate(10deg) scale(1.2); opacity: 0.9; filter: drop-shadow(0 0 60px var(--accent)); }
+  80% { opacity: 1; }
+  100% { transform: translateY(100vh) rotate(40deg) scale(0.8); opacity: 0; filter: drop-shadow(0 0 10px var(--accent)); }
+}
+
+@keyframes shootingStarDimoon {
+  0% { transform: translate(100vw, -20vh) rotate(-45deg) scale(1); opacity: 1; filter: drop-shadow(0 0 20px var(--accent)); }
+  5% { transform: translate(-20vw, 100vh) rotate(-45deg) scale(0.5); opacity: 0; }
+  100% { transform: translate(-20vw, 100vh) rotate(-45deg) scale(0.5); opacity: 0; }
+}
+
+@keyframes floatSpin {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(180deg); filter: drop-shadow(0 0 20px var(--accent)); }
+  100% { transform: translateY(0px) rotate(360deg); }
+}
+
+html.dimoon body,
+html.dimoon-blue body {
+  background-image:
+    radial-gradient(1.5px 1.5px at 15% 25%, #ffffff 100%, transparent),
+    radial-gradient(2px 2px at 35% 45%, var(--accent) 100%, transparent),
+    radial-gradient(1.5px 1.5px at 50% 60%, #ffffff 100%, transparent),
+    radial-gradient(2px 2px at 70% 80%, var(--accent) 100%, transparent),
+    radial-gradient(1px 1px at 85% 15%, #ffffff 100%, transparent),
+    radial-gradient(2.5px 2.5px at 90% 90%, var(--accent) 100%, transparent),
+    radial-gradient(2px 2px at 10% 80%, var(--accent) 100%, transparent);
+  background-size: 200px 200px;
+  background-color: var(--bg);
+  animation: starsTwinkle 8s linear infinite;
+}
+
+/* Dimoon: Golden, warm magical vibe */
+html.dimoon::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% -20%, rgba(253, 224, 71, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -2;
+  animation: dimoonPulse 10s ease-in-out infinite;
+}
+
+html.dimoon .bg-theme-card,
+html.dimoon .bg-theme-sidebar {
+  border: 2px solid var(--border);
+  box-shadow: 4px 4px 0px 0px var(--accent), inset 0 0 20px rgba(253, 224, 71, 0.05);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(180deg, rgba(11, 14, 32, 0.8) 0%, rgba(11, 14, 32, 1) 100%);
+  backdrop-filter: blur(12px);
+}
+
+html.dimoon .bg-theme-card:hover {
+  box-shadow: 8px 8px 0px 0px var(--accent), inset 0 0 40px rgba(253, 224, 71, 0.15);
+  border-color: var(--accent);
+  transform: translateY(-4px) scale(1.01);
+}
+
+html.dimoon .btn-tactile {
+  box-shadow: 4px 4px 0px 0px var(--accent);
+  border: 2px solid var(--border);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+html.dimoon .btn-tactile::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(transparent, rgba(253, 224, 71, 0.3), transparent 30%);
+  animation: floatSpin 4s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+html.dimoon .btn-tactile:hover::after {
+  opacity: 1;
+}
+
+html.dimoon .btn-tactile > * {
+  position: relative;
+  z-index: 1;
+}
+
+html.dimoon .btn-tactile:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 7px 7px 0px 0px var(--accent);
+  border-color: var(--accent);
+}
+html.dimoon .btn-tactile:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px var(--accent);
+}
+
+/* Fix text contrast on accent backgrounds */
+html.dimoon .bg-theme-accent.text-white,
+html.dimoon-blue .bg-theme-accent.text-white,
+html.dimoon .bg-theme-accent .text-white,
+html.dimoon-blue .bg-theme-accent .text-white,
+html.dimoon .bg-theme-success.text-white,
+html.dimoon .bg-theme-success .text-white {
+  color: var(--bg) !important;
+}
+
+html.dimoon .bg-theme-accent,
+html.dimoon-blue .bg-theme-accent,
+html.dimoon .bg-theme-success {
+  color: var(--bg);
+  font-weight: 800;
+  text-shadow: none;
+}
+
+/* Dimoon Blue: Neon, glassmorphic, floating vibe */
+html.dimoon-blue::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 80% 120%, rgba(56, 189, 248, 0.2) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: -2;
+  animation: dimoonPulse 12s ease-in-out infinite reverse;
+}
+
+html.dimoon-blue .bg-theme-card,
+html.dimoon-blue .bg-theme-sidebar {
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.1), inset 0 0 20px rgba(56, 189, 248, 0.05);
+  border-radius: 20px;
+  transition: all 0.4s ease;
+}
+
+html.dimoon-blue .bg-theme-card:hover {
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.3), inset 0 0 30px rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.8);
+  transform: translateY(-2px);
+}
+
+html.dimoon-blue .btn-tactile {
+  box-shadow: 0 4px 15px rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+html.dimoon-blue .btn-tactile::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: skewX(-20deg);
+  animation: shimmerBlue 4s infinite;
+  pointer-events: none;
+}
+
+html.dimoon-blue .btn-tactile > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes shimmerBlue {
+  0% { left: -100%; }
+  20% { left: 200%; }
+  100% { left: 200%; }
+}
+
+html.dimoon-blue .btn-tactile:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(56, 189, 248, 0.6), inset 0 0 15px rgba(56, 189, 248, 0.3);
+  border-color: rgba(56, 189, 248, 0.9);
+}
+html.dimoon-blue .btn-tactile:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 5px rgba(56, 189, 248, 0.4);
+}
+
+/* Pseudo Elements for Dimoon (Golden Moon & Stars) */
+html.dimoon body::after {
+  content: "☽";
+  position: fixed;
+  top: 10vh;
+  right: 10vw;
+  font-size: clamp(40px, 15vw, 200px);
+  color: var(--accent);
+  z-index: -1;
+  pointer-events: none;
+  animation: moonRiseSet 30s ease-in-out infinite;
+}
+
+html.dimoon body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), #fff);
+  z-index: -1;
+  pointer-events: none;
+  animation: shootingStarDimoon 12s cubic-bezier(0.4, 0, 1, 1) infinite;
+}
+
+html.dimoon #root::after {
+  content: "✦";
+  position: fixed;
+  top: 30vh;
+  left: 10vw;
+  font-size: clamp(16px, 6vw, 80px);
+  color: var(--accent);
+  opacity: 0.6;
+  z-index: -1;
+  pointer-events: none;
+  animation: floatSpin 15s linear infinite, dimoonPulse 4s ease-in-out infinite;
+}
+
+html.dimoon #root::before {
+  content: "✧";
+  position: fixed;
+  bottom: 20vh;
+  right: 25vw;
+  font-size: clamp(12px, 5vw, 60px);
+  color: var(--accent);
+  opacity: 0.4;
+  z-index: -1;
+  pointer-events: none;
+  animation: floatSpin 20s linear infinite reverse, dimoonPulse 6s ease-in-out infinite 2s;
+}
+
+/* Pseudo Elements for Dimoon Blue (Cosmic, Icy) */
+html.dimoon-blue body::after {
+  content: "☾";
+  position: fixed;
+  top: 5vh;
+  left: 5vw;
+  font-size: clamp(50px, 18vw, 250px);
+  color: var(--accent);
+  z-index: -1;
+  pointer-events: none;
+  animation: moonRiseSet 40s ease-in-out infinite reverse;
+  filter: drop-shadow(0 0 40px var(--accent));
+}
+
+html.dimoon-blue body::before {
+  content: "";
+  position: fixed;
+  top: 20vh;
+  right: -20vw;
+  width: 250px;
+  height: 3px;
+  background: linear-gradient(270deg, transparent, var(--accent), #fff);
+  z-index: -1;
+  pointer-events: none;
+  animation: shootingStarDimoon 8s cubic-bezier(0.4, 0, 1, 1) infinite 4s;
+  transform-origin: right center;
+}
+
+html.dimoon-blue #root::after {
+  content: "✺";
+  position: fixed;
+  top: 15vh;
+  right: 15vw;
+  font-size: clamp(24px, 8vw, 120px);
+  color: var(--accent);
+  opacity: 0.5;
+  z-index: -1;
+  pointer-events: none;
+  animation: floatSpin 25s linear infinite, dimoonPulse 5s ease-in-out infinite;
+}
+
+html.dimoon-blue #root::before {
+  content: "❅";
+  position: fixed;
+  bottom: 15vh;
+  left: 20vw;
+  font-size: clamp(16px, 6vw, 80px);
+  color: var(--accent);
+  opacity: 0.3;
+  z-index: -1;
+  pointer-events: none;
+  animation: floatSpin 18s linear infinite reverse, dimoonPulse 7s ease-in-out infinite 3s;
+}

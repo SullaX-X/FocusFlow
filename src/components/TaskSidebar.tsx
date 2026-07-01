@@ -69,7 +69,7 @@ export default function TaskSidebar({ isOpen, onClose, onSave, disciplines }: an
                   type="text" 
                   value={title}
                   onChange={e => setTitle(e.target.value)}
-                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors"
+                  className="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-3 text-theme-text outline-none focus:border-theme-accent transition-colors"
                   placeholder="Что нужно сделать?"
                 />
               </div>
@@ -79,7 +79,7 @@ export default function TaskSidebar({ isOpen, onClose, onSave, disciplines }: an
                 <select
                   value={selectedDiscipline}
                   onChange={e => setSelectedDiscipline(e.target.value)}
-                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors appearance-none"
+                  className="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-3 text-theme-text outline-none focus:border-theme-accent transition-colors appearance-none"
                 >
                   {disciplines.map((d: Discipline) => (
                     <option key={d.id} value={d.id}>{d.name}</option>
@@ -103,7 +103,7 @@ export default function TaskSidebar({ isOpen, onClose, onSave, disciplines }: an
                     type="button"
                     onClick={() => setEnergy('low')}
                     className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border transition-colors ${
-                      energy === 'low' ? 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-500/20 dark:border-emerald-500/50 dark:text-emerald-400' : 'bg-slate-50 border-slate-200 text-slate-500 dark:bg-theme-bg dark:border-theme-border hover:bg-theme-border-border'
+                      energy === 'low' ? 'bg-theme-success/10 border-theme-success/30 text-theme-success dark:bg-theme-success/20 dark:border-theme-success/50' : 'bg-slate-50 border-slate-200 text-slate-500 dark:bg-theme-bg dark:border-theme-border hover:bg-theme-border-border'
                     }`}
                   >
                     🔋 Низкая
@@ -118,8 +118,8 @@ export default function TaskSidebar({ isOpen, onClose, onSave, disciplines }: an
                   type="url" 
                   value={contentUrl}
                   onChange={e => setContentUrl(e.target.value)}
-                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors"
-                  placeholder="https://..."
+                  className="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-3 text-theme-text outline-none focus:border-theme-accent transition-colors"
+                  placeholder="Вставьте ссылку на статью или YouTube..."
                 />
               </div>
 
@@ -129,7 +129,7 @@ export default function TaskSidebar({ isOpen, onClose, onSave, disciplines }: an
                   value={description}
                   onChange={e => setDescription(e.target.value)}
                   rows={4}
-                  className="w-full bg-slate-50 border-slate-200 text-slate-900 dark:bg-theme-bg border dark:border-theme-border rounded-xl px-4 py-3 dark:text-theme-text outline-none focus:border-blue-500 transition-colors resize-none"
+                  className="w-full bg-theme-bg border border-theme-border rounded-xl px-4 py-3 text-theme-text outline-none focus:border-theme-accent transition-colors resize-none"
                   placeholder="Дополнительная информация..."
                 />
               </div>
@@ -147,7 +147,7 @@ export default function TaskSidebar({ isOpen, onClose, onSave, disciplines }: an
                 type="button"
                 onClick={handleSave}
                 disabled={!title || !selectedDiscipline}
-                className="flex-1 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors disabled:opacity-50 flex justify-center items-center gap-2"
+                className="flex-1 py-3 px-4 rounded-xl bg-theme-accent hover:bg-theme-accent/90 text-white font-medium transition-colors disabled:opacity-50 flex justify-center items-center gap-2"
               >
                 Сохранить
               </button>

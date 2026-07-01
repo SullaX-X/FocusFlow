@@ -1,6 +1,19 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
-type Theme = 'light' | 'dark' | 'system' | 'nordic' | 'latte' | 'oled';
+export type Theme = 'light' | 'dark' | 'system' | 'nordic' | 'latte' | 'oled' | 'liquid-glass' | 'iman_love' | 'dimoon' | 'dimoon-blue';
+
+export const THEME_NAMES: Record<Theme, string> = {
+  'light': 'Светлая',
+  'dark': 'Темная',
+  'system': 'Системная',
+  'nordic': 'Nordic',
+  'latte': 'Latte',
+  'oled': 'OLED',
+  'liquid-glass': 'Liquid Glass',
+  'iman_love': 'Iman Love',
+  'dimoon': 'Di Moon',
+  'dimoon-blue': 'Di Moon Blue'
+};
 
 interface ThemeContextType {
   theme: Theme;
@@ -14,16 +27,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('system');
   const [actualTheme, setActualTheme] = useState<string>('dark');
 
+  const ALL_THEMES = ['light', 'dark', 'system', 'nordic', 'latte', 'oled', 'liquid-glass', 'iman_love', 'dimoon', 'dimoon-blue'];
+  const DARK_THEMES = ['dark', 'nordic', 'oled', 'liquid-glass', 'dimoon', 'dimoon-blue'];
+
   useEffect(() => {
     const saved = localStorage.getItem('focusflow_theme') as Theme;
-    if (['light', 'dark', 'system', 'nordic', 'latte', 'oled'].includes(saved)) {
+    if (ALL_THEMES.includes(saved)) {
       setThemeState(saved);
     }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('focusflow_theme', theme);
-    document.documentElement.classList.remove('light', 'dark', 'nordic', 'latte', 'oled');
+    document.documentElement.classList.remove('light', 'dark', 'nordic', 'latte', 'oled', 'liquid-glass', 'iman_love', 'dimoon', 'dimoon-blue');
     
     let resolvedTheme = theme;
     let isDark = false;
@@ -35,7 +51,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
       const listener = (e: MediaQueryListEvent) => {
         const newTheme = e.matches ? 'light' : 'dark';
-        document.documentElement.classList.remove('light', 'dark', 'nordic', 'latte', 'oled');
+        document.documentElement.classList.remove(...ALL_THEMES);
         if (newTheme === 'dark') document.documentElement.classList.add('dark');
         else document.documentElement.classList.add('light');
         setActualTheme(newTheme);
@@ -46,7 +62,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setActualTheme(resolvedTheme);
       return () => mediaQuery.removeEventListener('change', listener);
     } else {
-      isDark = ['dark', 'nordic', 'oled'].includes(theme);
+      isDark = DARK_THEMES.includes(theme);
       if (isDark) {
         document.documentElement.classList.add('dark');
       }
@@ -71,3 +87,4 @@ export function useTheme() {
   }
   return context;
 }
+

@@ -15,8 +15,8 @@ async function startServer() {
   // API Route for AI Plan Generation
   app.post("/api/ai/plan", async (req, res) => {
     try {
-      const { topic, level, time } = req.body;
-      const apiKey = process.env.GEMINI_API_KEY;
+      const { topic, level, time, apiKey: reqApiKey } = req.body;
+      const apiKey = reqApiKey || process.env.GEMINI_API_KEY;
       if (!apiKey) {
         throw new Error("GEMINI_API_KEY is not configured.");
       }
@@ -34,7 +34,7 @@ async function startServer() {
         for (let i = 0; i < retries; i++) {
           try {
             return await ai.models.generateContent({
-              model: "gemini-2.5-flash",
+              model: "gemini-2.5-flash-lite",
               contents: prompt,
               config: {
                 responseMimeType: "application/json",
@@ -74,7 +74,7 @@ async function startServer() {
 
       const response = await generateWithRetry(ai, prompt);
 
-      const jsonStr = response.text?.trim() || "{}";
+      const jsonStr = response?.text?.trim() || "{}";
       const data = JSON.parse(jsonStr);
       res.json({ success: true, data });
     } catch (error: any) {
@@ -86,8 +86,8 @@ async function startServer() {
   // API Route for Smart Summary
   app.post("/api/ai/summary", async (req, res) => {
     try {
-      const { url } = req.body;
-      const apiKey = process.env.GEMINI_API_KEY;
+      const { url, apiKey: reqApiKey } = req.body;
+      const apiKey = reqApiKey || process.env.GEMINI_API_KEY;
       if (!apiKey) {
         throw new Error("GEMINI_API_KEY is not configured.");
       }
@@ -101,7 +101,7 @@ async function startServer() {
         for (let i = 0; i < retries; i++) {
           try {
             return await ai.models.generateContent({
-              model: "gemini-2.5-flash",
+              model: "gemini-2.5-flash-lite",
               contents: prompt,
             });
           } catch (e: any) {
@@ -117,7 +117,44 @@ async function startServer() {
 
       const response = await generateSummaryWithRetry(ai, prompt);
 
-      res.json({ success: true, summary: response.text });
+      res.json({ success: true, summary: response?.text });
+    } catch (error: any) {
+      console.error(error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
+  // API Route for AI Quiz
+  app.post("/api/ai/quiz", async (req, res) => {
+    try {
+      const { summary, apiKey: reqApiKey } = req.body;
+      const apiKey = reqApiKey || process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        throw new Error("GEMINI_API_KEY is not configured.");
+      }
+
+      const ai = new GoogleGenAI({
+        apiKey,
+        httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
+      });
+
+      const prompt = `На основе следующего конспекта составь 3 коротких вопроса для проверки знаний. Возвращай строго массив строк JSON:
+Конспект:
+${summary}`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash-lite",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.ARRAY,
+            items: { type: Type.STRING }
+          }
+        }
+      });
+
+      res.json({ success: true, questions: JSON.parse(response?.text || "[]") });
     } catch (error: any) {
       console.error(error);
       res.status(500).json({ success: false, error: error.message });
@@ -135,7 +172,7 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
-    app.get('*all', (req, res) => {
+    app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }

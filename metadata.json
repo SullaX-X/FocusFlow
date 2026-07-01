@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "description": "",
+  "name": "FocusFlow",
+  "description": "Premium productivity and deep work application with AI support",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

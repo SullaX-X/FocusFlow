@@ -28,7 +28,7 @@ export default function ConfirmModal({ title, message, onConfirm, onCancel }: Pr
           </button>
           <button 
             onClick={onConfirm}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-[#494bd6] dark:hover:bg-[#c0c1ff] dark:hover:text-[#1000a9] text-white rounded-xl font-medium transition-colors"
+            className="px-4 py-2 bg-theme-accent hover:bg-theme-accent/90    text-white rounded-xl font-medium transition-colors"
           >
             Подтвердить
           </button>
