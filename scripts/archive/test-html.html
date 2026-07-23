@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+<button id="p1">Play audio 1</button>
+<button id="p2">Play audio 2</button>
+<script>
+document.getElementById('p1').onclick = () => {
+  const a = new Audio('http://localhost:3000/assets/Nightingale.mp3');
+  a.play().catch(e => console.error(e));
+};
+document.getElementById('p2').onclick = () => {
+  const a = new Audio('http://localhost:3000/assets/Nightingale.mp3');
+  a.crossOrigin = 'anonymous';
+  a.play().catch(e => console.error(e));
+};
+</script>
+</body>
+</html>

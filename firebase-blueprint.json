@@ -1,0 +1,39 @@
+{
+  "collections": {
+    "users": {
+      "documents": {
+        "{userId}": {
+          "fields": {
+            "dust": {
+              "type": "number",
+              "description": "Total focus dust earned"
+            },
+            "unlockedItems": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of unlocked sound IDs"
+            },
+            "settings": {
+              "type": "map",
+              "fields": {
+                "theme": { "type": "string" },
+                "showBackgroundEffects": { "type": "boolean" },
+                "performanceMode": { "type": "boolean" },
+                "powerSaving": { "type": "boolean" },
+                "simplifiedConstellations": { "type": "boolean" },
+                "staticElements": { "type": "boolean" },
+                "tabTimer": { "type": "boolean" },
+                "simplifiedUI": { "type": "boolean" }
+              }
+            },
+            "lastSynced": {
+              "type": "timestamp"
+            }
+          }
+        }
+      }
+    }
+  }
+}
